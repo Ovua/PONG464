@@ -12,7 +12,7 @@
 
 # Back to where it all started
 
-The **Amstrad CPC 464 was the first computer I ever programmed on. I was 7 years old.**
+The **Amstrad CPC 464 was the first computer I ever programmed on, when I was just 7 years old — thanks to my mother, who was programming in BASIC herself at the time.**
 
 I remember experimenting with BASIC and being amazed that a few lines of code could make something happen on the screen. I didn't know much about CPUs, memory maps or machine code at the time. I just knew I wanted to understand how it worked.
 

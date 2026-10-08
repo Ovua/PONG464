@@ -1,11 +1,4 @@
 ; PONG 464 - Amstrad CPC 464, Z80 + Locomotive BASIC 1.0
-; Assemble at &9000. MODE 1 must be selected by the BASIC loader.
-; Returns RESULT: 1=human scores, 2=computer scores, 3=ESC
-; CPC firmware calls: &BD19 wait flyback, &BB1E test key
-;
-; Screen in MODE 1: 80 bytes per 8-scanline character row.
-; Sprites are 2 bytes wide, 8 pixels high per logical row.
-
         org &9000
 START:
         ld a,10
@@ -81,7 +74,7 @@ DRAW_ALL:
         ret
 
 ; DRAW_BLOCK: A=byte, B=x byte (0..78), C=text row (0..24), D=height (rows)
-; no clipping required: caller guarantees bounds
+
 DRAW_BLOCK:
         push af
         push de

@@ -56,7 +56,7 @@ The CPC uses **ROM/RAM banking** so those ROM regions can be mapped into the Z80
 
 An **EPROM** (*Erasable Programmable Read-Only Memory*) is a programmable chip that can hold firmware or software persistently; traditional UV-erasable EPROMs can be erased and programmed again with suitable equipment. Custom ROM software is possible on CPC systems using compatible expansion hardware or carefully designed hardware modifications. The original CPC 464 does **not** need an EPROM replacement to run this game.
 
-**PONG 464 runs from RAM.** The BASIC loader copies its Z80 machine code to `\&9000` and calls it directly. No ROM flashing, soldering or hardware modification is involved.
+**PONG 464 runs from RAM.** The BASIC loader copies its Z80 machine code to `&9000` and calls it directly. No ROM flashing, soldering or hardware modification is involved.
 
 ## What the game does
 
@@ -89,10 +89,10 @@ The AI follows the ball with a deliberately limited update rate. The point is to
 4. At the BASIC prompt, enter:
 
 ```basic
-   RUN
-   ```
+RUN
+```
 
-The BASIC program reserves RAM, sets `MODE 1`, writes the machine-code bytes from `DATA` statements into memory at `\&9000`, checks their checksum, and starts the game.
+The BASIC program reserves RAM, sets `MODE 1`, writes the machine-code bytes from `DATA` statements into memory at `&9000`, checks their checksum, and starts the game.
 
 **Important:** `PONG464.BAS` is a **plain-text BASIC listing**. It is **not** a tokenized CPC BASIC file, a `.CDT` cassette image or a `.DSK` disk image. Pasting a text file into an emulator only works if that emulator supports the appropriate import/keyboard-injection mechanism.
 
@@ -115,18 +115,18 @@ The game intentionally divides the work between BASIC and Assembly.
 ```text
 Locomotive BASIC 1.0
   |
-  +-- MEMORY \&8FFF           Reserve the code area
+  +-- MEMORY &8FFF           Reserve the code area
   +-- MODE 1 / palette       Prepare the display
-  +-- DATA -> POKE \&9000     Load 475 bytes of machine code
-  +-- CALL \&9000             Run one rally
+  +-- DATA -> POKE &9000     Load 475 bytes of machine code
+  +-- CALL &9000             Run one rally
   |     |
-  |     +-- \&BD19            Wait for frame flyback
-  |     +-- \&BB1E            Test key state
+  |     +-- &BD19            Wait for frame flyback
+  |     +-- &BB1E            Test key state
   |     +-- Update paddles / ball / collisions
-  |     +-- Draw to RAM at \&C000
+  |     +-- Draw to RAM at &C000
   |     +-- Return a result code
   |
-  +-- PEEK \&91D9             Read rally result
+  +-- PEEK &91D9             Read rally result
   +-- Update scoreboard
   +-- Repeat or show winner
 ```
@@ -135,11 +135,11 @@ Locomotive BASIC 1.0
 
 |Address|Purpose|
 |-|-|
-|`\&9000`|Start of the Z80 program (`START`)|
-|`\&91D9`|Result byte read by BASIC (`RESULT`)|
-|`\&C000`|Standard MODE 1 screen RAM base used by the drawing routines|
-|`\&BD19`|CPC firmware: wait for frame flyback|
-|`\&BB1E`|CPC firmware: test whether a key is pressed|
+|`&9000`|Start of the Z80 program (`START`)|
+|`&91D9`|Result byte read by BASIC (`RESULT`)|
+|`&C000`|Standard MODE 1 screen RAM base used by the drawing routines|
+|`&BD19`|CPC firmware: wait for frame flyback|
+|`&BB1E`|CPC firmware: test whether a key is pressed|
 
 The Assembly routine returns these values via the result byte: `1` = player scores, `2` = computer scores, `3` = ESC/exit. After a point, BASIC updates the score and starts another rally.
 
@@ -149,10 +149,10 @@ The CPC screen is not a simple linear pixel array. In the normal 16 KB layout, s
 
 * A full 320-pixel scanline occupies **80 bytes**.
 * One character row contains **8 scanlines**.
-* Corresponding scanlines in successive character rows are separated by **80 bytes**, while moving to the next scanline within a character row involves an offset of `\&0800`.
+* Corresponding scanlines in successive character rows are separated by **80 bytes**, while moving to the next scanline within a character row involves an offset of `&0800`.
 * The code draws small, solid blocks for the paddles and ball rather than using BASIC drawing instructions every frame.
 
-The engine calls the firmware routine at `\&BD19` for frame synchronization and performs a game-logic update approximately every third flyback (about **16.7 updates per second** on a 50 Hz CPC).
+The engine calls the firmware routine at `&BD19` for frame synchronization and performs a game-logic update approximately every third flyback (about **16.7 updates per second** on a 50 Hz CPC).
 
 ## Repository contents
 
@@ -160,43 +160,28 @@ The engine calls the firmware routine at `\&BD19` for frame synchronization and 
 PONG464/
 ├── README.md          This documentation
 ├── PONG464.BAS        Full BASIC listing and machine-code DATA loader
-├── PONG464.ASM        Z80 Assembly source (origin \&9000)
+├── PONG464.ASM        Z80 Assembly source (origin &9000)
 ├── PONG464.BIN        Raw 475-byte machine-code image
-├── PONG464.MAP        Symbol/address map for debugging
-└── build\_pong464.py   Project-specific two-pass assembler/build tool
+└── PONG464.MAP        Symbol/address map for debugging
 ```
 
 `PONG464.BIN` is a **raw binary**, not a standalone bootable cassette or disk image. `PONG464.MAP` provides label addresses useful when studying the Assembly or debugging machine code.
 
-## Rebuilding from source
+## Working with the Assembly source
 
-You need **Python 3** on your development machine. No third-party Python packages are required by the included build script.
+`PONG464.ASM` contains the editable Z80 source, while `PONG464.BIN` is the current assembled machine-code image. The BASIC listing (`PONG464.BAS`) embeds the machine-code bytes in `DATA` statements.
 
-Edit `PONG464.ASM` and run:
-
-```sh
-python build\_pong464.py
-```
-
-The script:
-
-1. Parses the Z80 Assembly source.
-2. Performs two-pass label/symbol resolution.
-3. Checks the ranges of relative jumps.
-4. Generates `PONG464.BIN` and `PONG464.MAP`.
-5. Regenerates the BASIC loader with decimal `DATA` statements and a checksum.
-
-The assembler is **purpose-built for this source**, not a full Z80 assembler. If you introduce unsupported instructions, you'll need to extend it or switch to a general-purpose Z80 assembler.
+To modify the engine, use a compatible Z80 assembler with the code assembled at `&9000`. After assembling, the updated machine-code bytes and checksum must also be reflected in the BASIC loader.
 
 ## Development status and testing
 
-**Status: work in progress — not yet hardware-validated.**
+**Status: work in progress — successfully tested on an original Amstrad CPC 464.**
 
 The current build has been generated from the source. Previous project checks included relative-branch validation, BASIC loader checksum verification and instruction-level simulation of selected scoring/exit paths.
 
-Those checks are useful, but **they do not prove the game works correctly on real hardware**. The code still needs end-to-end testing in a complete CPC emulator and, ideally, on an original CPC 464.
+**The game has now been run successfully on an original Amstrad CPC 464.** This confirms that the current version runs on real hardware. Further testing is still valuable as development continues.
 
-Areas to test and refine include keyboard behavior, rendering, collision edge cases, AI difficulty, timing, scoring, sound and returning cleanly to BASIC.
+Areas for further testing and refinement include keyboard behavior, rendering, collision edge cases, AI difficulty, timing, scoring, sound and returning cleanly to BASIC.
 
 ### Ideas for later
 
@@ -223,7 +208,7 @@ And, most importantly, get to write code again for the first computer I ever use
 * **Header photograph:** [Bill Bertram / Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Amstrad_CPC464.jpg), [CC BY-SA 2.5](https://creativecommons.org/licenses/by-sa/2.5/). Photo unchanged.
 * **Hardware and firmware references:** [CPCWiki](https://www.cpcwiki.eu/index.php/CPC), [CPC hardware revisions](https://cpctech.cpcwiki.de/docs/cpcrev.html), [Amstrad CPC firmware guide](https://cpctech.cpcwiki.de/docs/manual/s158se01.pdf).
 
-\---
+---
 
 *PONG 464 — back to where it all started.*
 

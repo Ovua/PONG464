@@ -9,9 +9,10 @@
 <p align="center">
   <sub>Photo by <a href="https://commons.wikimedia.org/wiki/File:Amstrad_CPC464.jpg">Bill Bertram</a> — CC BY-SA 2.5</sub>
 </p>
-## Back to where it all started
 
-The **Amstrad CPC 464 was the first computer I ever programmed on. I was seven years old.**
+# Back to where it all started
+
+The **Amstrad CPC 464 was the first computer I ever programmed on. I was 7 years old.**
 
 I remember experimenting with BASIC and being amazed that a few lines of code could make something happen on the screen. I didn't know much about CPUs, memory maps or machine code at the time. I just knew I wanted to understand how it worked.
 

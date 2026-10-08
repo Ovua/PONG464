@@ -181,6 +181,12 @@ The current build has been generated from the source. Previous project checks in
 
 **The game has now been run successfully on an original Amstrad CPC 464.** This confirms that the current version runs on real hardware. Further testing is still valuable as development continues.
 
+### Stress testing and hardware safety
+
+Beyond the basic compatibility check, **extensive stress tests and hardware-level checks have been carried out on the original CPC 464**. These included monitoring operating temperatures and observing the machine's overall stability during testing, with the goal of identifying abnormal behavior or signs of overheating.
+
+The aim is to maintain a careful, controlled testing process and minimize potential risks to the original hardware. Temperature monitoring is a hardware-level check, not a feature or reading provided by the game itself. These tests provide additional confidence, but they do not guarantee that every possible hardware issue has been ruled out.
+
 Areas for further testing and refinement include keyboard behavior, rendering, collision edge cases, AI difficulty, timing, scoring, sound and returning cleanly to BASIC.
 
 ### Ideas for later

@@ -2,10 +2,13 @@
 
 ### A tiny Pong game for the Amstrad CPC 464 — Z80 Assembly + Locomotive BASIC 1.0
 
-!\[Amstrad CPC 464 with its original monitor](https://upload.wikimedia.org/wikipedia/commons/9/91/Amstrad\_CPC464.jpg)
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Amstrad_CPC464.jpg" alt="Amstrad CPC 464 with monitor" width="700">
+</p>
 
-*Amstrad CPC 464, photographed by* [*Bill Bertram*](https://commons.wikimedia.org/wiki/File:Amstrad_CPC464.jpg)*. Image licensed under* [*CC BY-SA 2.5*](https://creativecommons.org/licenses/by-sa/2.5/)*. No alterations made.*
-
+<p align="center">
+  <sub>Photo by <a href="https://commons.wikimedia.org/wiki/File:Amstrad_CPC464.jpg">Bill Bertram</a> — CC BY-SA 2.5</sub>
+</p>
 ## Back to where it all started
 
 The **Amstrad CPC 464 was the first computer I ever programmed on. I was seven years old.**
